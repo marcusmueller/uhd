@@ -159,7 +159,9 @@ public:
         ("gps_gprmc")
         ("gps_time")
         ("gps_locked")
-        ("gps_servo");
+        ("gps_servo")
+        ("gps_osc_health")
+        ("gps_osc_locked");
     return ret;
   }
 
@@ -179,6 +181,15 @@ public:
     }
     else if(key == "gps_servo") {
         return sensor_value_t("GPS servo status", get_servo(), "");
+    }
+    else if(key == "gps_osc_locked") {
+        return sensor_value_t("GPS Oscilator lock status", osc_locked(), "locked", "unlocked");
+    }
+    else if(key == "gps_osc_health") {
+        return sensor_value_t(
+                 "GPS Oscillator health",
+		 osc_health(),
+                 "");
     }
     else {
         throw uhd::value_error("gps ctrl get_sensor unknown key: " + key);
@@ -325,6 +336,46 @@ private:
     return std::string();
   }
 
+  bool osc_locked(void) {
+    int error_cnt = 0;
+    while(error_cnt < 3) {
+        try {
+	    _flush();
+	    _send("SYNC:LOCK?\n");
+            std::string reply;
+	    do {
+		reply = _recv();
+	    } while (reply.size() < 1 || (reply.at(0) != '0' && reply.at(0) != '1'));
+	    if(reply.size() <= 1) return false;
+            return reply.at(0) == '1';
+        } catch(std::exception &e) {
+            UHD_MSG(warning) << "osc_locked: " << e.what();
+            error_cnt++;
+        }
+    }
+    throw uhd::value_error("Timeout after no valid message found");
+    return false;
+  }
+
+  std::string osc_health(void) {
+    int error_cnt = 0;
+    while(error_cnt < 3) {
+        try {
+	    _flush();
+	    _send("SYNC:health?\n");
+            std::string reply;
+	    do {
+		reply = _recv();
+	    } while (reply.size() < 1 || reply.at(0) != '0');
+            return reply;
+        } catch(std::exception &e) {
+            UHD_MSG(warning) << "osc_health: " << e.what();
+            error_cnt++;
+        }
+    }
+    throw uhd::value_error("Timeout after no valid message found");
+    return std::string();
+  }
   uart_iface::sptr _uart;
 
   void _flush(void){
