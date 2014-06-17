@@ -43,7 +43,7 @@ int UHD_SAFE_MAIN(int argc, char *argv[]){
     desc.add_options()
         ("help", "help message")
         ("args", po::value<std::string>(&args)->default_value(""), "multi uhd device address args")
-        ("nsamps", po::value<size_t>(&total_num_samps)->default_value(1000), "total number of samples to receive")
+        ("nsamps", po::value<size_t>(&total_num_samps)->default_value(1000), "total number of samples to receive, 0 to stream forever")
         ("rate", po::value<double>(&rate)->default_value(100e6/16), "rate of incoming samples")
         ("freq", po::value<double>(&freq)->default_value(0), "rf center frequency in Hz")
         ("gain", po::value<double>(&gain)->default_value(0), "gain for the RF chain")
@@ -139,7 +139,7 @@ int UHD_SAFE_MAIN(int argc, char *argv[]){
     std::vector<std::complex<float> > buff(rx_stream->get_max_num_samps());
     uhd::transport::udp_simple::sptr udp_xport = uhd::transport::udp_simple::make_connected(addr, port);
 
-    while(num_acc_samps < total_num_samps){
+    while(!total_num_samps || num_acc_samps < total_num_samps){
         size_t num_rx_samps = rx_stream->recv(
             &buff.front(), buff.size(), md
         );
