@@ -1176,6 +1176,9 @@ x300_impl::both_xports_t x300_impl::make_transport(
         } else if (mb.loaded_fpga_image == "XGS") {
             eth_data_rec_frame_size = X300_10GE_DATA_FRAME_MAX_SIZE;
             _tree->access<double>("/mboards/"+boost::lexical_cast<std::string>(mb_index) / "link_max_rate").set(X300_MAX_RATE_10GIGE);
+        } else if (mb.loaded_fpga_image == "1G") {
+            eth_data_rec_frame_size = X300_1GE_DATA_FRAME_MAX_SIZE;
+            _tree->access<double>("/mboards/"+boost::lexical_cast<std::string>(mb_index) / "link_max_rate").set(X300_MAX_RATE_1GIGE);
         }
 
         if (eth_data_rec_frame_size == 0) {
