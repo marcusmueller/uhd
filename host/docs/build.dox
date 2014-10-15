@@ -72,20 +72,19 @@ The following compilers are known to work:
 - **Usage:** build time (required)
 - **Download URL:** http://www.cheetahtemplate.org/download.html
 - **Download URL (Windows installer):** http://feisley.com/python/cheetah/
+- **Alternative installation method:**
+  - Install **setuptools** (from http://pypi.python.org/pypi/setuptools or `{yum|apt-get} install python-setuptools` on Fedora/Debian), then
+  - use `easy_install Cheetah` to install Cheetah.
 
-**Alternative method:**
-Install **setuptools**, and use the **easy_install** command to install Cheetah.
-http://pypi.python.org/pypi/setuptools
 
 ### Doxygen
 
 - **Purpose:** generates HTML API documentation
 - **Usage:** build time (optional)
 - **Download URL:** http://www.stack.nl/~dimitri/doxygen/download.html#latestsrc
-
-**Alternate method:**
-Install **setuptools**, and use the **easy_install** command to install Docutils.
-http://pypi.python.org/pypi/setuptools
+- **Alternative installation method:**
+  - Install **setuptools** (from http://pypi.python.org/pypi/setuptools or `{yum|apt-get} install python-setuptools` on Fedora/Debian), then
+  - use `easy_install Docutils` to install Docutils.
 
 \section build_instructions_unix Build Instructions (Unix)
 
